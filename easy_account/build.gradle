@@ -1,0 +1,81 @@
+plugins {
+    id 'org.springframework.boot' version '2.4.2'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'java'
+}
+
+group = 'io.github.xbeeant'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenLocal()
+    maven {
+        url "https://maven.aliyun.com/repository/public"
+    }
+    maven {
+        url "https://maven.aliyun.com/repository/jcenter"
+    }
+    maven {
+        url "https://maven.aliyun.com/repository/spring"
+    }
+    maven {
+        url "https://maven.aliyun.com/repository/spring-plugin"
+    }
+    maven {
+        url "https://maven.aliyun.com/repository/gradle-plugin"
+    }
+    maven {
+        url "https://maven.aliyun.com/repository/google"
+    }
+    maven {
+        url "https://maven.aliyun.com/repository/grails-core"
+    }
+    maven {
+        url "https://maven.aliyun.com/repository/apache-snapshots"
+    }
+    maven {
+        url "https://s01.oss.sonatype.org/content/groups/public/"
+    }
+}
+
+dependencies {
+    implementation project(':easy_common')
+
+//    implementation 'org.springframework.boot:spring-boot-starter-data-ldap'
+//    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+//    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    implementation 'org.springframework.session:spring-session-jdbc'
+    implementation 'org.springframework.session:spring-session-core'
+//    implementation 'org.springframework.session:spring-session-data-redis'
+
+    implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.1.4'
+
+
+    runtimeOnly 'mysql:mysql-connector-java'
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    compile('io.github.xbeeant:mybatis-pagehelper:1.0.0-SNAPSHOT')
+    compile('io.github.xbeeant:crypto:1.0.0-SNAPSHOT')
+//    compile('io.github.xbeeant:cache:1.0.0-SNAPSHOT')
+
+    compile group: 'com.alibaba', name: 'druid-spring-boot-starter', version: '1.2.3'
+
+    implementation 'com.github.xiaoymin:knife4j-spring-boot-starter:3.0.2'
+}
+
+test {
+    useJUnitPlatform()
+}
