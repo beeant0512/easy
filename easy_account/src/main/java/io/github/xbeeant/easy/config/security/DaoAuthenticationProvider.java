@@ -2,7 +2,7 @@ package io.github.xbeeant.easy.config.security;
 
 import io.github.xbeeant.easy.core.model.User;
 import io.github.xbeeant.easy.core.service.IUserService;
-import io.github.xbeeant.easy.util.SecurityUtil;
+import io.github.xbeeant.easy.util.SecurityHelper;
 import io.github.xbeeant.spring.security.LoginParamters;
 import io.github.xbeeant.spring.security.LoginUser;
 import io.github.xbeeant.spring.web.SpringContextProvider;
@@ -35,7 +35,7 @@ public class DaoAuthenticationProvider extends AbstractUserDetailsAuthentication
         String cryptPassword = authentication.getCredentials().toString();
         String decryptPassword = "";
         if (cryptPassword != null) {
-            decryptPassword = SecurityUtil.decrypt(loginParams.getIp(), cryptPassword);
+            decryptPassword = SecurityHelper.decrypt(loginParams.getIp(), cryptPassword);
         }
         // 密码校验
         boolean matches = getSpringUserService().checkPassword(user, decryptPassword, loginParams.getIp());

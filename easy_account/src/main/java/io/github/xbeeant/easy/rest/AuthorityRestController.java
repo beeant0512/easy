@@ -1,14 +1,14 @@
 package io.github.xbeeant.easy.rest;
 
 import io.github.xbeeant.core.ApiResponse;
-import io.github.xbeeant.core.RandomUtil;
+import io.github.xbeeant.core.RandomHelper;
 import io.github.xbeeant.easy.core.model.User;
 import io.github.xbeeant.easy.core.service.IUserService;
 import io.github.xbeeant.easy.rest.vo.CurrentUserVo;
 import io.github.xbeeant.easy.rest.vo.GeographicVo;
 import io.github.xbeeant.easy.rest.vo.RegisterVo;
 import io.github.xbeeant.easy.rest.vo.SelectOption;
-import io.github.xbeeant.easy.util.SecurityUtil;
+import io.github.xbeeant.easy.util.SecurityHelper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -50,7 +50,7 @@ public class AuthorityRestController {
     public ApiResponse<Boolean> captcha(String phone) {
         ApiResponse<Boolean> apiResponse = new ApiResponse<>();
         // todo send captcha
-        String captcha = RandomUtil.mix(6);
+        String captcha = RandomHelper.mix(6);
         logger.warn("{} {}", phone, captcha);
 
 //        CacheHelper.Remote.set(KeyPrefix.CAPTCHA + phone, captcha, 60L);
@@ -81,7 +81,7 @@ public class AuthorityRestController {
     @ApiOperation(value = "当前使用者", notes = "")
     @GetMapping("current")
     public ApiResponse<CurrentUserVo> currentUser() {
-        User user = SecurityUtil.getCurrentUser();
+        User user = SecurityHelper.getCurrentUser();
 
         ApiResponse<User> userResponse = userService.selectByPrimaryKey(user.getId());
         user = userResponse.getData();
@@ -115,7 +115,7 @@ public class AuthorityRestController {
     @ApiOperation(value = "获取加密密钥", notes = "")
     @GetMapping("encrypt")
     public ApiResponse<String> encryptKey(HttpServletRequest request) throws NoSuchAlgorithmException {
-        return SecurityUtil.getPublicKey(request);
+        return SecurityHelper.getPublicKey(request);
     }
 
     /**
@@ -129,7 +129,7 @@ public class AuthorityRestController {
     @GetMapping("status")
     public ApiResponse<Boolean> loginStatus() {
         ApiResponse<Boolean> apiResponse = new ApiResponse<>();
-        apiResponse.setData(null != SecurityUtil.getCurrentUser());
+        apiResponse.setData(null != SecurityHelper.getCurrentUser());
         return apiResponse;
     }
 
@@ -175,7 +175,7 @@ public class AuthorityRestController {
     @ApiOperation(value = "更新当前用户", notes = "")
     @PostMapping("current")
     public ApiResponse<String> updateCurrentUser() {
-        User user = SecurityUtil.getCurrentUser();
+        User user = SecurityHelper.getCurrentUser();
 
         ApiResponse<String> result = new ApiResponse<>();
         CurrentUserVo current = new CurrentUserVo();

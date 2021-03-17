@@ -38,3 +38,4 @@ out/
 .vscode/
 /easy_account/target/frontend/
 /gradle/wrapper/
+*.DS_Store

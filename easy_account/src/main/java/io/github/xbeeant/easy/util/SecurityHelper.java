@@ -20,10 +20,10 @@ import java.security.NoSuchAlgorithmException;
  * @version 1.0.0
  * @date 2020/12/11
  */
-public class SecurityUtil {
-    private static final Logger logger = LoggerFactory.getLogger(SecurityUtil.class);
+public class SecurityHelper {
+    private static final Logger logger = LoggerFactory.getLogger(SecurityHelper.class);
 
-    private SecurityUtil() {
+    private SecurityHelper() {
 
     }
 
