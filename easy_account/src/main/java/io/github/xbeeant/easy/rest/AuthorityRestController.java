@@ -90,11 +90,11 @@ public class AuthorityRestController {
         current.setName(user.getNickname());
         current.setPhone(user.getPrefix() + "-" + user.getMobile());
         current.setEmail(user.getEmail());
-        current.setCountry(user.getCountry());
+
         GeographicVo geographic = new GeographicVo();
-        geographic.setCity(new SelectOption(user.getCity()));
-        geographic.setProvince(new SelectOption(user.getProvince()));
-        geographic.setDistrict(new SelectOption(user.getDistrict()));
+        geographic.setCity(new SelectOption(user.getCityId()));
+        geographic.setProvince(new SelectOption(user.getProvinceId()));
+        geographic.setDistrict(new SelectOption(user.getDistrictId()));
         current.setGeographic(geographic);
         current.setSignature(user.getProfile());
         current.setUserid(String.valueOf(user.getId()));

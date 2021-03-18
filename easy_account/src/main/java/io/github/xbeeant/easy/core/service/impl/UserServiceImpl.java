@@ -76,7 +76,7 @@ public class UserServiceImpl extends AbstractSecurityMybatisPageHelperServiceImp
         example.setEmail(record.getMail());
         example.setMobile(record.getMobile());
         example.setPrefix(record.getPrefix());
-        example.setPassword(record.getPassword());
+        example.setPassword(B_CRYPT_PASSWORD_ENCODER.encode(record.getPassword()));
         ApiResponse<User> userApiResponse = insertSelective(example);
         // result
         result.setResult(userApiResponse.getCode(), userApiResponse.getMsg());
@@ -99,4 +99,3 @@ public class UserServiceImpl extends AbstractSecurityMybatisPageHelperServiceImp
         }
     }
 }
-

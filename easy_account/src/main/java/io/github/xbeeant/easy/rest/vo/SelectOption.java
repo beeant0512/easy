@@ -19,6 +19,10 @@ public class SelectOption {
         this.key = key;
     }
 
+    public SelectOption(Long key) {
+        this.key = String.valueOf(key);
+    }
+
     public String getKey() {
         return key;
     }
