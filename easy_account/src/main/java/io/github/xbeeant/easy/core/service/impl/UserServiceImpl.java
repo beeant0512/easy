@@ -14,16 +14,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import java.util.Collections;
+import io.github.xbeeant.config.AbstractSecurityMybatisPageHelperServiceImpl;
 
 /**
  * 账号
  */
 @Service
-public class UserServiceImpl extends AbstractSecurityMybatisPageHelperServiceImpl<User, Long> implements IUserService {
+public class UserServiceImpl extends AbstractSecurityMybatisPageHelperServiceImpl<User, Long> {
 
-    @Autowired
     private UserMapper userMapper;
 
     private static final BCryptPasswordEncoder B_CRYPT_PASSWORD_ENCODER = new BCryptPasswordEncoder();
@@ -42,7 +41,6 @@ public class UserServiceImpl extends AbstractSecurityMybatisPageHelperServiceImp
         // 获取权限
         LoginUser<User> loginUser = new LoginUser<>(String.valueOf(user.getId()), user.getNickname(), username, user.getPassword(), Collections.emptyList());
         loginUser.setDetails(user);
-
         return loginUser;
     }
 
@@ -54,7 +52,6 @@ public class UserServiceImpl extends AbstractSecurityMybatisPageHelperServiceImp
             result.setResult(1, "两次密码不一致");
             return result;
         }
-
         // 手机号唯一性验证
         User example = new User();
         example.setMobile(record.getMobile());
@@ -63,7 +60,6 @@ public class UserServiceImpl extends AbstractSecurityMybatisPageHelperServiceImp
             result.setResult(2, "手机号已被注册");
             return result;
         }
-
         // 邮箱唯一性验证
         example = new User();
         example.setEmail(record.getMail());
@@ -84,17 +80,14 @@ public class UserServiceImpl extends AbstractSecurityMybatisPageHelperServiceImp
         return result;
     }
 
-    @Override
     public IMybatisPageHelperDao<User, Long> getRepositoryDao() {
         return this.userMapper;
     }
 
-    @Override
     public void setDefaults(User record) {
         if (record.getId() == null) {
             record.setId(IdWorker.getId());
         }
-
         if (null != record.getPassword()) {
             record.setPassword(B_CRYPT_PASSWORD_ENCODER.encode(record.getPassword()));
         }

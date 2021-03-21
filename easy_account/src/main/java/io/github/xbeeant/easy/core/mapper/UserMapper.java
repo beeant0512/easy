@@ -10,6 +10,7 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface UserMapper extends IMybatisPageHelperDao<User, Long> {
+
     /**
      * 获取用户
      *

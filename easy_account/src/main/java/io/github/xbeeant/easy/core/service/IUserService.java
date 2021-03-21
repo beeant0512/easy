@@ -6,7 +6,6 @@ import io.github.xbeeant.easy.rest.vo.RegisterVo;
 import io.github.xbeeant.spring.mybatis.pagehelper.IMybatisPageHelperService;
 import io.github.xbeeant.spring.security.LoginUser;
 
-
 /**
  * 用户服务
  */
@@ -21,7 +20,6 @@ public interface IUserService extends IMybatisPageHelperService<User, Long> {
      * @return {@link boolean}
      */
     boolean checkPassword(User user, String rawPassword, String ip);
-
 
     /**
      * 按用户名加载用户
@@ -43,4 +41,3 @@ public interface IUserService extends IMybatisPageHelperService<User, Long> {
      */
     ApiResponse<String> register(RegisterVo record);
 }
-

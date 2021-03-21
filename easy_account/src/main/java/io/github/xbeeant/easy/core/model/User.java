@@ -4,102 +4,86 @@ import io.github.xbeeant.core.BaseModelObject;
 import java.io.Serializable;
 
 /**
- * 
  * user
  */
-public class User extends BaseModelObject<Long> implements Serializable {
+public class User extends BaseModelObject<Long> {
+
     /**
-     * 
      * 用户ID
      */
     private Long id;
 
     /**
-     * 
      * 登录账号名
      */
     private String account;
 
     /**
-     * 
      * 头像
      */
     private String avatar;
 
     /**
-     * 
      * 国家ID
      */
     private Long countryId;
 
     /**
-     * 
      * 城市ID
      */
     private Long cityId;
 
     /**
-     * 
      * 省份ID
      */
     private Long provinceId;
 
     /**
-     * 
      * 区县ID
      */
     private Long districtId;
 
     /**
-     * 
      * 街道
      */
     private String street;
 
     /**
-     * 
      * 邮箱
      */
     private String email;
 
     /**
-     * 
      * 区域编码
      */
     private String prefix;
 
     /**
-     * 
      * 手机号
      */
     private String mobile;
 
     /**
-     * 
      * 是否禁用， 0 正常 1 已禁用
      */
     private byte[] invalid;
 
     /**
-     * 
      * 昵称
      */
     private String nickname;
 
     /**
-     * 
      * 密码
      */
     private String password;
 
     /**
-     * 
      * 个人简介
      */
     private String profile;
 
     /**
-     * 
      * 头衔
      */
     private String title;
@@ -368,12 +352,10 @@ public class User extends BaseModelObject<Long> implements Serializable {
         this.title = title == null ? null : title.trim();
     }
 
-    @Override
     public Long valueOfKey() {
         return id;
     }
 
-    @Override
     public void assignKeyValue(Long value) {
         this.id = value;
     }
