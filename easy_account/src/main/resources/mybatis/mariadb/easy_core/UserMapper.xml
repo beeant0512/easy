@@ -23,9 +23,9 @@
     <result column="password" jdbcType="VARCHAR" property="password" />
     <result column="profile" jdbcType="VARCHAR" property="profile" />
     <result column="title" jdbcType="VARCHAR" property="title" />
-    <result column="create_at" jdbcType="TIMESTAMP" property="createAt" />
+    <result column="create_at" jdbcType="TIMESTAMP" property="createAt" typeHandler="io.github.xbeeant.easy.config.mybatis.typehandlers.DateTimeResultHandler" />
     <result column="create_by" jdbcType="BIGINT" property="createBy" />
-    <result column="update_at" jdbcType="TIMESTAMP" property="updateAt" />
+    <result column="update_at" jdbcType="TIMESTAMP" property="updateAt" typeHandler="io.github.xbeeant.easy.config.mybatis.typehandlers.DateTimeResultHandler"  />
     <result column="update_by" jdbcType="BIGINT" property="updateBy" />
   </resultMap>
   <sql id="Example_Where_Clause">
@@ -832,7 +832,9 @@
       AND title LIKE CONCAT('%', #{title,jdbcType=VARCHAR}, '%')
     </if>
     <if test="createAt != null">
-      AND create_at = #{createAt,jdbcType=TIMESTAMP}
+      <if test="createAt.start == null and createAt.end == null">
+        AND create_at = #{createAt,jdbcType=TIMESTAMP}
+      </if>
       <if test="createAt.start != null">
         AND create_at &gt;= #{createAt.start,jdbcType=TIMESTAMP}
       </if>
@@ -924,7 +926,9 @@
       AND title LIKE CONCAT('%', #{example.title,jdbcType=VARCHAR}, '%')
     </if>
     <if test="example.createAt != null">
-      AND create_at = #{example.createAt,jdbcType=TIMESTAMP}
+      <if test="example.createAt.start == null and example.createAt.end == null">
+        AND create_at = #{example.createAt,jdbcType=TIMESTAMP}
+      </if>
       <if test="example.createAt.begin != null">
         AND create_at &gt;= #{example.createAt.begin,jdbcType=TIMESTAMP}
       </if>

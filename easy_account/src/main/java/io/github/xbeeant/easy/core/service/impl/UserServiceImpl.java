@@ -1,5 +1,6 @@
 package io.github.xbeeant.easy.core.service.impl;
 
+import io.github.xbeeant.core.date.DateTime;
 import io.github.xbeeant.easy.core.mapper.UserMapper;
 import io.github.xbeeant.easy.core.model.User;
 import io.github.xbeeant.easy.core.service.IUserService;
@@ -97,5 +98,7 @@ public class UserServiceImpl extends AbstractSecurityMybatisPageHelperServiceImp
         if (null != record.getPassword()) {
             record.setPassword(B_CRYPT_PASSWORD_ENCODER.encode(record.getPassword()));
         }
+        record.setCreateAt(new DateTime());
+        record.setUpdateAt(new DateTime());
     }
 }

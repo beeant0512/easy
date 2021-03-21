@@ -82,7 +82,7 @@ public class SecurityConfiguration {
             http.exceptionHandling().authenticationEntryPoint(new UnauthorizedAuthenticationEntryPoint());
             // 自定义登录求参数获取
             MoreParameterAuthenticationFilter authenticationFilter = new MoreParameterAuthenticationFilter(authenticationManagerBean(), loginApi);
-            MoreParameterAuthenticationFilter.setUsername("userName");
+
             // 自定义失败处理器
             authenticationFilter.setAuthenticationFailureHandler(new AuthenticationFailedHandler());
             // 自定义成功处理器
