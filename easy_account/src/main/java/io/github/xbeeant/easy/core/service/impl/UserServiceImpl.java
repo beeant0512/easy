@@ -1,31 +1,29 @@
 package io.github.xbeeant.easy.core.service.impl;
 
+import io.github.xbeeant.core.ApiResponse;
+import io.github.xbeeant.core.IdWorker;
 import io.github.xbeeant.core.date.DateTime;
+import io.github.xbeeant.easy.config.AbstractSecurityMybatisPageHelperServiceImpl;
 import io.github.xbeeant.easy.core.mapper.UserMapper;
 import io.github.xbeeant.easy.core.model.User;
 import io.github.xbeeant.easy.core.service.IUserService;
-import io.github.xbeeant.easy.config.AbstractSecurityMybatisPageHelperServiceImpl;
 import io.github.xbeeant.easy.rest.vo.RegisterVo;
-import io.github.xbeeant.core.ApiResponse;
-import io.github.xbeeant.core.IdWorker;
 import io.github.xbeeant.spring.mybatis.pagehelper.IMybatisPageHelperDao;
 import io.github.xbeeant.spring.security.LoginUser;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
 import java.util.Collections;
-import io.github.xbeeant.config.AbstractSecurityMybatisPageHelperServiceImpl;
 
 /**
  * 账号
  */
 @Service
-public class UserServiceImpl extends AbstractSecurityMybatisPageHelperServiceImpl<User, Long> {
-
-    private UserMapper userMapper;
+public class UserServiceImpl extends AbstractSecurityMybatisPageHelperServiceImpl<User, Long> implements IUserService {
 
     private static final BCryptPasswordEncoder B_CRYPT_PASSWORD_ENCODER = new BCryptPasswordEncoder();
+    private UserMapper userMapper;
 
     @Override
     public boolean checkPassword(User user, String rawPassword, String ip) {
@@ -80,10 +78,12 @@ public class UserServiceImpl extends AbstractSecurityMybatisPageHelperServiceImp
         return result;
     }
 
+    @Override
     public IMybatisPageHelperDao<User, Long> getRepositoryDao() {
         return this.userMapper;
     }
 
+    @Override
     public void setDefaults(User record) {
         if (record.getId() == null) {
             record.setId(IdWorker.getId());

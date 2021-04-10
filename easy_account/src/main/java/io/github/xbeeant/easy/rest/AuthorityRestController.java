@@ -2,12 +2,11 @@ package io.github.xbeeant.easy.rest;
 
 import io.github.xbeeant.core.ApiResponse;
 import io.github.xbeeant.core.RandomHelper;
+import io.github.xbeeant.easy.core.model.Cache;
 import io.github.xbeeant.easy.core.model.User;
+import io.github.xbeeant.easy.core.service.ICacheService;
 import io.github.xbeeant.easy.core.service.IUserService;
-import io.github.xbeeant.easy.rest.vo.CurrentUserVo;
-import io.github.xbeeant.easy.rest.vo.GeographicVo;
-import io.github.xbeeant.easy.rest.vo.RegisterVo;
-import io.github.xbeeant.easy.rest.vo.SelectOption;
+import io.github.xbeeant.easy.rest.vo.*;
 import io.github.xbeeant.easy.util.SecurityHelper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -17,7 +16,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
@@ -34,7 +35,7 @@ import java.util.List;
 public class AuthorityRestController {
 
     private static final Logger logger = LoggerFactory.getLogger(AuthorityRestController.class);
-
+    private ICacheService cacheService;
     private IUserService userService;
 
     /**
@@ -49,11 +50,15 @@ public class AuthorityRestController {
     @PostMapping("captcha")
     public ApiResponse<Boolean> captcha(String phone) {
         ApiResponse<Boolean> apiResponse = new ApiResponse<>();
-        // todo send captcha
+
         String captcha = RandomHelper.mix(6);
         logger.warn("{} {}", phone, captcha);
 
-//        CacheHelper.Remote.set(KeyPrefix.CAPTCHA + phone, captcha, 60L);
+        Cache cache = new Cache();
+        cache.setOwner(phone);
+        cache.setType("captcha");
+        cache.setValue(captcha);
+        cacheService.insertSelective(cache);
         return apiResponse;
     }
 
@@ -108,14 +113,18 @@ public class AuthorityRestController {
      *
      * @param request 请求 {@link HttpServletRequest}
      * @return {@link ApiResponse}
-     * @see ApiResponse
-     * @see String
      * @throws NoSuchAlgorithmException 没有这样的算法
+     * @see ApiResponse
+     * @see SecurityKeyVo
      */
     @ApiOperation(value = "获取加密密钥", notes = "")
     @GetMapping("encrypt")
-    public ApiResponse<String> encryptKey(HttpServletRequest request) throws NoSuchAlgorithmException {
-        return SecurityHelper.getPublicKey(request);
+    public ApiResponse<String> encryptKey(HttpServletRequest request, HttpServletResponse response) throws NoSuchAlgorithmException {
+        ApiResponse<String> result = new ApiResponse<>();
+        ApiResponse<SecurityKeyVo> publicKey = SecurityHelper.getPublicKey(request);
+        response.addCookie(new Cookie(SecurityHelper.key, String.valueOf(publicKey.getData().getId())));
+        result.setData(publicKey.getData().getKey());
+        return result;
     }
 
     /**
@@ -160,6 +169,11 @@ public class AuthorityRestController {
     @PostMapping("register")
     public ApiResponse<String> register(@ApiParam(value = "params", required = true, example = "") @RequestBody RegisterVo params) {
         return userService.register(params);
+    }
+
+    @Autowired
+    public void setCacheService(ICacheService cacheService) {
+        this.cacheService = cacheService;
     }
 
     @Autowired
