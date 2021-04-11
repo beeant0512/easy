@@ -1,6 +1,10 @@
 package io.github.xbeeant.easy.config.security;
 
+import com.github.pagehelper.util.StringUtil;
+import io.github.xbeeant.core.ApiResponse;
+import io.github.xbeeant.easy.core.model.Cache;
 import io.github.xbeeant.easy.core.model.User;
+import io.github.xbeeant.easy.core.service.ICacheService;
 import io.github.xbeeant.easy.core.service.IUserService;
 import io.github.xbeeant.easy.util.SecurityHelper;
 import io.github.xbeeant.spring.security.LoginParamters;
@@ -12,6 +16,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.authentication.dao.AbstractUserDetailsAuthenticationProvider;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.thymeleaf.cache.ICache;
 
 /**
  * 数据库账号密码认证提供者
@@ -24,6 +29,8 @@ public class DaoAuthenticationProvider extends AbstractUserDetailsAuthentication
 
     private static IUserService springUserService;
 
+    private static ICacheService cacheService;
+
     @Override
     @SuppressWarnings("unchecked")
     protected void additionalAuthenticationChecks(UserDetails userDetails, UsernamePasswordAuthenticationToken authentication) {
@@ -32,15 +39,29 @@ public class DaoAuthenticationProvider extends AbstractUserDetailsAuthentication
         User user = details.getDetails();
         // 密码解密
         LoginParamters loginParams = (LoginParamters) authentication.getDetails();
-        String cryptPassword = authentication.getCredentials().toString();
-        String decryptPassword = "";
-        if (cryptPassword != null) {
-            decryptPassword = SecurityHelper.decrypt(loginParams.getIp(), cryptPassword);
-        }
-        // 密码校验
-        boolean matches = getSpringUserService().checkPassword(user, decryptPassword, loginParams.getIp());
 
-        if (!matches) {
+        // 密码校验
+        boolean valid = false;
+        String captcha = String.valueOf(loginParams.getExtras().get("captcha"));
+        if (StringUtil.isNotEmpty(captcha)) {
+            String cacheId = (String) loginParams.getExtras().get("cache_id");
+            ApiResponse<Cache> cacheResponse = getCacheService().selectByPrimaryKey(Long.valueOf(cacheId));
+            if (cacheResponse.getSuccess() && cacheResponse.getData().getValue().equals(captcha)) {
+                return;
+            }
+        } else {
+            String cryptPassword = authentication.getCredentials().toString();
+            String decryptPassword = "";
+            if (cryptPassword != null) {
+                decryptPassword = SecurityHelper.decrypt(loginParams.getIp(), cryptPassword);
+            }
+            // 密码校验
+            valid = getSpringUserService().checkPassword(user, decryptPassword, loginParams.getIp());
+        }
+
+
+
+        if (!valid) {
             throw new BadCredentialsException("账号密码错误");
         }
 
@@ -73,5 +94,12 @@ public class DaoAuthenticationProvider extends AbstractUserDetailsAuthentication
             springUserService = SpringContextProvider.getBean(IUserService.class);
         }
         return springUserService;
+    }
+
+    public static ICacheService getCacheService() {
+        if (null == cacheService) {
+            cacheService = SpringContextProvider.getBean(ICacheService.class);
+        }
+        return cacheService;
     }
 }

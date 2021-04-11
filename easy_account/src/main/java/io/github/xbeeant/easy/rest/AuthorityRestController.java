@@ -2,6 +2,7 @@ package io.github.xbeeant.easy.rest;
 
 import io.github.xbeeant.core.ApiResponse;
 import io.github.xbeeant.core.RandomHelper;
+import io.github.xbeeant.core.date.DateTime;
 import io.github.xbeeant.easy.core.model.Cache;
 import io.github.xbeeant.easy.core.model.User;
 import io.github.xbeeant.easy.core.service.ICacheService;
@@ -20,6 +21,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.security.NoSuchAlgorithmException;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -41,24 +43,28 @@ public class AuthorityRestController {
     /**
      * 发送验证码
      *
-     * @param phone 电话 {@link String}
+     * @param username 电话 {@link String}
      * @return {@link ApiResponse}
      * @see ApiResponse
      * @see Boolean
      */
     @ApiOperation(value = "发送验证码", notes = "")
     @PostMapping("captcha")
-    public ApiResponse<Boolean> captcha(String phone) {
-        ApiResponse<Boolean> apiResponse = new ApiResponse<>();
+    public ApiResponse<Long> captcha(String username) {
+        ApiResponse<Long> apiResponse = new ApiResponse<>();
 
         String captcha = RandomHelper.mix(6);
-        logger.warn("{} {}", phone, captcha);
+        logger.warn("{} {}", username, captcha);
 
         Cache cache = new Cache();
-        cache.setOwner(phone);
+        cache.setOwner(username);
         cache.setType("captcha");
         cache.setValue(captcha);
+        DateTime dateTime = new DateTime();
+        cache.setExpireAt(dateTime.plus(5, Calendar.MINUTE));
         cacheService.insertSelective(cache);
+
+        apiResponse.setData(cache.getId());
         return apiResponse;
     }
 

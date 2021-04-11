@@ -10,6 +10,7 @@ import io.github.xbeeant.easy.core.service.IUserService;
 import io.github.xbeeant.easy.rest.vo.RegisterVo;
 import io.github.xbeeant.spring.mybatis.pagehelper.IMybatisPageHelperDao;
 import io.github.xbeeant.spring.security.LoginUser;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -17,12 +18,15 @@ import org.springframework.stereotype.Service;
 import java.util.Collections;
 
 /**
- * 账号
+ * 用户服务
+ *
+ * @author xiaobiao
  */
 @Service
 public class UserServiceImpl extends AbstractSecurityMybatisPageHelperServiceImpl<User, Long> implements IUserService {
 
     private static final BCryptPasswordEncoder B_CRYPT_PASSWORD_ENCODER = new BCryptPasswordEncoder();
+
     private UserMapper userMapper;
 
     @Override
@@ -93,5 +97,10 @@ public class UserServiceImpl extends AbstractSecurityMybatisPageHelperServiceImp
         }
         record.setCreateAt(new DateTime());
         record.setUpdateAt(new DateTime());
+    }
+
+    @Autowired
+    public void setUserMapper(UserMapper userMapper) {
+        this.userMapper = userMapper;
     }
 }
