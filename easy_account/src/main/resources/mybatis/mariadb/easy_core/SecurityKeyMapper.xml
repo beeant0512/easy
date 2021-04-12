@@ -8,8 +8,8 @@
       This element was generated on Sat Apr 10 21:38:13 CST 2021.
     -->
     <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="expire_at" jdbcType="TIMESTAMP" property="expireAt" />
-    <result column="create_at" jdbcType="TIMESTAMP" property="createAt" />
+    <result column="expire_at" jdbcType="TIMESTAMP" property="expireAt" typeHandler="io.github.xbeeant.easy.config.mybatis.typehandlers.DateTimeResultHandler" />
+    <result column="create_at" jdbcType="TIMESTAMP" property="createAt" typeHandler="io.github.xbeeant.easy.config.mybatis.typehandlers.DateTimeResultHandler" />
   </resultMap>
   <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="io.github.xbeeant.easy.core.model.SecurityKey">
     <!--

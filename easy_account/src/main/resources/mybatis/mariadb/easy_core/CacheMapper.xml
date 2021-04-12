@@ -9,7 +9,7 @@
     -->
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="type" jdbcType="VARCHAR" property="type" />
-    <result column="create_at" jdbcType="TIMESTAMP" property="createAt" />
+    <result column="create_at" jdbcType="TIMESTAMP" property="createAt" typeHandler="io.github.xbeeant.easy.config.mybatis.typehandlers.DateTimeResultHandler" />
     <result column="owner" jdbcType="VARCHAR" property="owner" />
     <result column="expire_at" jdbcType="TIMESTAMP" property="expireAt" />
   </resultMap>
